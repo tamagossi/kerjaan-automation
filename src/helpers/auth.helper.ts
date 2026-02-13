@@ -4,7 +4,7 @@ import path from 'node:path';
 import { request } from '@playwright/test';
 
 import { loadEnvConfig } from '@/src/config';
-import { LOGIN_CREDENTIALS } from '@/tests/fe/auth';
+import { LOGIN_CREDENTIALS } from '@/tests/fe/auth/(login)';
 
 const AUTH_DIR = path.resolve(process.cwd(), '.auth');
 const TOKEN_PATH = path.join(AUTH_DIR, 'token.json');

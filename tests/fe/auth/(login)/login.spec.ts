@@ -1,12 +1,23 @@
 import { test } from '../auth.fixture';
-import { LOGIN_CREDENTIALS } from './index';
+import { createRandomCredentials, LOGIN_CREDENTIALS } from './index';
 
-test.describe('Login Feature', () => {
-	test('Should login successfully', async ({ loginPage }) => {
+test.describe('Login feature: ', () => {
+	test('TS.1: Should login successfully', async ({ loginPage }) => {
 		await loginPage.visit();
 		await loginPage.verifyOnLoginPage();
 		await loginPage.login(LOGIN_CREDENTIALS.EMAIL, LOGIN_CREDENTIALS.PASSWORD);
-		// Verify redirection to agents page
+
 		await loginPage.expectUrl(/.*agents/);
+	});
+
+	test('TS.2: Should fail to login with incorrect credentials', async ({ loginPage }) => {
+		const { email, password } = createRandomCredentials();
+
+		await loginPage.visit();
+		await loginPage.verifyOnLoginPage();
+		await loginPage.login(email, password);
+
+		await loginPage.verifyOnLoginPage();
+		await loginPage.verifyErrorMessageVisible();
 	});
 });

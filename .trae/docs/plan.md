@@ -9,192 +9,223 @@
 > - **Storage State**: Implement `storageState` caching in `auth.helper.ts` and use it in `fe.fixture.ts` to share auth state across tests efficiently.
 > - **Fixture Separation**: Ensure `loginPage` uses a clean `page` context (not authenticated), while `authenticatedPage` uses the stored state.
 
+## Implement Dynamic Form Automation Tests
+
+> Context: Automate feature flag and sidebar visibility tests for Dynamic Form (C.1.3 & C.1.4) in `submission/(dynamic-form)`.
+
+> **Scenarios**:
+>
+> 1. **Whitelisted User** (`annisa.fajri+dev@staffinc.co`): Sidebar hidden initially, but Task Operations and Form menu should be visible.
+> 2. **Non-Whitelisted User** (`asd@mailo.com`): Task Operations/Form menu should be hidden.
+
 ## Directory Structure
 
-- Create directory `tests/fe/auth/(login)`
-- Ensure directory `.auth` exists.
-
-## File Operations
-
-- `Terminal`
-    - Create `.env.dev` with localhost URL and API URL.
-        ```bash
-        cat <<EOF > .env.dev
-        FE_BASE_URL=http://localhost:3000
-        BE_BASE_URL=https://api.dev.kerjaan.co.id
-        BE_API_VERSION=v1
-        SLOW_MO=500
-        HEADLESS=false
-        EOF
-        ```
+- Create directory `tests/fe/submission/(dynamic-form)`
 
 ## File Implementation Plan
 
-### 1. Token & State Caching (`src/helpers/auth.helper.ts`)
+### 1. Update Credentials (`tests/fe/auth/(login)/login.constant.ts`)
 
-- `getAuthToken()`: Return cached token or fetch new one.
-- `getStorageState(url: string)`: Generate Playwright storage state.
-
-    ```typescript
-    import fs from 'node:fs';
-    import path from 'node:path';
-    import { request } from '@playwright/test';
-    import { loadEnvConfig } from '@/src/config';
-    import { LOGIN_CREDENTIALS } from '@/tests/fe/auth/(login)/login.constant';
-
-    const AUTH_DIR = path.resolve(process.cwd(), '.auth');
-    const TOKEN_PATH = path.join(AUTH_DIR, 'token.json');
-    const STATE_PATH = path.join(AUTH_DIR, 'state.json');
-
-    export async function getAuthToken(): Promise<string> {
-    	if (!fs.existsSync(AUTH_DIR)) fs.mkdirSync(AUTH_DIR, { recursive: true });
-    	if (fs.existsSync(TOKEN_PATH)) {
-    		/* Check age < 24h and return cached token */
-    	}
-
-    	const env = loadEnvConfig();
-    	const apiContext = await request.newContext({ baseURL: env.BE_BASE_URL });
-    	const response = await apiContext.post(`/${env.BE_API_VERSION}/auth/login`, {
-    		data: { email: LOGIN_CREDENTIALS.EMAIL, password: LOGIN_CREDENTIALS.PASSWORD },
-    	});
-    	// ... handle response, cache token ...
-    }
-
-    export async function getStorageState(url: string): Promise<string> {
-    	if (fs.existsSync(STATE_PATH)) {
-    		/* Check age and return path */
-    	}
-    	const token = await getAuthToken();
-    	const urlObj = new URL(url);
-    	const state = {
-    		cookies: [
-    			{
-    				name: 'token',
-    				value: token,
-    				domain: urlObj.hostname,
-    				path: '/',
-    				expires: -1,
-    				httpOnly: false,
-    				secure: false,
-    				sameSite: 'Lax',
-    			},
-    		],
-    		origins: [],
-    	};
-    	fs.writeFileSync(STATE_PATH, JSON.stringify(state, null, 2));
-    	return STATE_PATH;
-    }
-    ```
-
-### 2. Base Fixture Update (`tests/fe/fe.fixture.ts`)
-
-- Update `authenticatedPage` fixture to use `storageState`.
-
-    ```typescript
-    import { getStorageState } from '@/src/helpers';
-
-    export const test = base.extend<FeFixtures>({
-    	authenticatedPage: async ({ browser, envConfig }, use) => {
-    		const statePath = await getStorageState(envConfig.FE_BASE_URL);
-    		const context = await browser.newContext({
-    			baseURL: envConfig.FE_BASE_URL,
-    			storageState: statePath,
-    		});
-    		const page = await context.newPage();
-    		await use(page);
-    		await context.close();
-    	},
-    });
-    ```
-
-### 3. Constants (`tests/fe/auth/(login)/login.constant.ts`)
-
-- Export `LOGIN_CREDENTIALS`.
+- Add `UNAUTHORIZED_CREDENTIALS` for `asd@mailo.com` to the existing constants.
 
     ```typescript
     export const LOGIN_CREDENTIALS = {
     	EMAIL: 'annisa.fajri+dev@staffinc.co',
     	PASSWORD: 'Asdasd123.',
     };
+
+    export const UNAUTHORIZED_CREDENTIALS = {
+    	EMAIL: 'asd@mailo.com',
+    	PASSWORD: 'Asdasd123!',
+    };
     ```
 
-### 4. Page Object Model (`tests/fe/auth/(login)/login.page.ts`)
+### 2. Page Object (`tests/fe/submission/(dynamic-form)/dynamic-form.page.ts`)
 
-- Class `LoginPage` extends `BasePage`.
+- Create `DynamicFormPage` class extending `BasePage`.
+- Define locators for "Task Operations" and "Form Template" menus.
+- Implement methods to:
+    - Navigate to settings page.
+    - Verify "Task Operations" is visible.
+    - Click "Task Operations" and verify "Form Template" is visible.
+    - Verify "Form Template" is hidden.
 
     ```typescript
     import { type Locator, type Page, expect } from '@playwright/test';
     import { BasePage } from '@/src/core';
 
-    export class LoginPage extends BasePage {
-    	readonly emailInput: Locator;
-    	readonly passwordInput: Locator;
-    	readonly submitButton: Locator;
+    export class DynamicFormPage extends BasePage {
+    	readonly taskOperationsMenu: Locator;
+    	readonly formMenu: Locator;
 
     	constructor(page: Page) {
     		super(page);
-    		this.emailInput = page.getByTestId('login-email-input');
-    		this.passwordInput = page.getByTestId('login-password-input');
-    		this.submitButton = page.getByTestId('login-submit-button');
+    		// Adjust locators based on actual implementation
+    		this.taskOperationsMenu = page.getByText('Task Operations');
+    		this.formMenu = page.getByText('Form Template');
     	}
 
-    	async visit() {
-    		await this.page.goto('/login');
+    	async navigateToSettings() {
+    		await this.page.goto('/settings');
     	}
 
-    	async login(email: string, password: string) {
-    		await this.emailInput.fill(email);
-    		await this.passwordInput.fill(password);
-    		await this.submitButton.click();
+    	async navigateToFormTemplate() {
+    		await this.page.goto('/submission/form-template'); // Adjust URL as needed
     	}
 
-    	async verifyOnLoginPage() {
-    		await expect(this.emailInput).toBeVisible();
+    	async verifyTaskOperationsVisible() {
+    		await expect(this.taskOperationsMenu).toBeVisible();
+    	}
+
+    	async verifyFormMenuVisible() {
+    		await this.taskOperationsMenu.click();
+    		await expect(this.formMenu).toBeVisible();
+    	}
+
+    	async verifyFormMenuHidden() {
+    		await expect(this.formMenu).toBeHidden();
     	}
     }
     ```
 
-### 5. Module Fixture (`tests/fe/auth/auth.fixture.ts`)
+### 3. Module Fixture (`tests/fe/submission/submission.fixture.ts`)
 
-- Extend `test` from `tests/fe/fe.fixture.ts`.
+- Create a new fixture for the submission module extending `fe.fixture.ts`.
+- **Decision**: Use `loginPage` (unauthenticated context) instead of `authenticatedPage` to allow explicit login with different credentials for each scenario.
+- Extend the fixture to include `dynamicFormPage` and `loginPage`.
 
     ```typescript
     import { test as base } from '../fe.fixture';
-    import { LoginPage } from './(login)';
+    import { DynamicFormPage } from './(dynamic-form)/dynamic-form.page';
+    import { LoginPage } from '../auth/(login)/login.page';
 
-    type AuthFixtures = {
+    type SubmissionFixtures = {
+    	dynamicFormPage: DynamicFormPage;
     	loginPage: LoginPage;
     };
 
-    export const test = base.extend<AuthFixtures>({
+    export const test = base.extend<SubmissionFixtures>({
     	loginPage: async ({ page }, use) => {
     		await use(new LoginPage(page));
+    	},
+    	dynamicFormPage: async ({ page }, use) => {
+    		await use(new DynamicFormPage(page));
     	},
     });
 
     export { expect } from '../fe.fixture';
     ```
 
-### 6. Barrel Exports
+### 4. Barrel Exports
 
-- `tests/fe/auth/(login)/index.ts`: Export `LoginPage`, `LOGIN_CREDENTIALS`.
-- `tests/fe/auth/index.ts`: Export `auth.fixture`, `login` sub-module.
+- Create `tests/fe/submission/(dynamic-form)/index.ts` to export the page, data, and fixture (if any).
+- Create `tests/fe/submission/index.ts` to export the submission fixture.
 
-### 7. Test Specifications (`tests/fe/auth/(login)/login.spec.ts`)
+### 5. Test Specifications (`tests/fe/submission/(dynamic-form)/dynamic-form.spec.ts`)
 
-- Import `test` from `../auth.fixture`.
+- **Scenario 1 (Whitelisted - Settings Visibility)**:
+    - **Context**: Whitelisted users should see "Task Operations" and the new "Form Template" menu.
+    - Visit login page (`localhost:3000`).
+    - Login with `annisa.fajri+dev@staffinc.co`.
+    - Navigate to `/settings`.
+    - Assert "Task Operations" is visible.
+    - Assert "Form Template" is visible.
+- **Scenario 2 (Non-Whitelisted - Settings Visibility)**:
+    - **Context**: Non-whitelisted users see "Task Operations" but NOT the "Form Template" menu.
+    - Visit login page.
+    - Login with `asd@mailo.com`.
+    - Navigate to `/settings`.
+    - Assert "Task Operations" is visible.
+    - Assert "Form Template" is hidden.
+- **Scenario 3 (Blacklisted - Legacy Forms)**:
+    - **Context**: Blacklisted users (typically those whitelisted for the new feature) cannot see legacy forms in the sidebar and are redirected to `/no-access`.
+    - Login with `annisa.fajri+dev@staffinc.co`.
+    - Attempt to visit legacy URLs (`/digital-forms`, `/digital-forms/assignment`).
+    - Assert redirect to `/no-access`.
+- **Scenario 4 (Non-Blacklisted - Legacy Forms)**:
+    - **Context**: Non-blacklisted users (those not on the new feature) retain access to legacy forms.
+    - Login with `asd@mailo.com`.
+    - Visit legacy URLs.
+    - Assert access is granted.
 
     ```typescript
-    import { expect, test } from '../auth.fixture';
-    import { LOGIN_CREDENTIALS } from './index';
+    import { expect, test } from '../submission.fixture';
+    import {
+    	LOGIN_CREDENTIALS,
+    	UNAUTHORIZED_CREDENTIALS,
+    } from '@/tests/fe/auth/(login)/login.constant';
 
-    test.describe('Login Feature', () => {
-    	test('Should login successfully', async ({ loginPage }) => {
-    		await loginPage.visit();
-    		await loginPage.verifyOnLoginPage();
+    const ROUTES = {
+    	SETTINGS: '/settings',
+    	NO_ACCESS: '/no-access',
+    	LEGACY_FORM: '/digital-forms',
+    	LEGACY_ASSIGNMENT: '/digital-forms/assignment',
+    };
+
+    test.describe('Dynamic Form Feature Flags & Legacy Access', () => {
+    	// Scenario 1: Whitelisted User (New Feature Access)
+    	test('Scenario 1: Whitelisted user sees Task Operations and Form menu', async ({
+    		loginPage,
+    		dynamicFormPage,
+    	}) => {
+    		// Context: Whitelisted for New Feature
+    		await loginPage.visit(); // localhost:3000
     		await loginPage.login(LOGIN_CREDENTIALS.EMAIL, LOGIN_CREDENTIALS.PASSWORD);
-    		// Verify redirection (e.g., check URL or dashboard element)
-    		await expect(loginPage.page).not.toHaveURL(/.*login/);
+
+    		await dynamicFormPage.navigateToSettings();
+    		await dynamicFormPage.verifyTaskOperationsVisible();
+    		await dynamicFormPage.verifyFormMenuVisible();
+    	});
+
+    	// Scenario 2: Non-Whitelisted User (No New Feature Access)
+    	test('Scenario 2: Non-whitelisted user sees Task Ops but NOT Form menu', async ({
+    		loginPage,
+    		dynamicFormPage,
+    	}) => {
+    		// Context: Non-Whitelisted for New Feature
+    		await loginPage.visit();
+    		await loginPage.login(
+    			UNAUTHORIZED_CREDENTIALS.EMAIL,
+    			UNAUTHORIZED_CREDENTIALS.PASSWORD
+    		);
+
+    		await dynamicFormPage.navigateToSettings();
+    		await dynamicFormPage.verifyTaskOperationsVisible();
+    		await dynamicFormPage.verifyFormMenuHidden();
+    	});
+
+    	// Scenario 3: Blacklisted User (Restricted from Legacy)
+    	// Assuming Whitelisted for New = Blacklisted for Legacy (Migration)
+    	test('Scenario 3: Blacklisted user cannot access legacy pages', async ({
+    		loginPage,
+    		dynamicFormPage,
+    	}) => {
+    		await loginPage.visit();
+    		await loginPage.login(LOGIN_CREDENTIALS.EMAIL, LOGIN_CREDENTIALS.PASSWORD);
+
+    		// Direct Access Check
+    		await dynamicFormPage.page.goto(ROUTES.LEGACY_FORM);
+    		await dynamicFormPage.expectUrl(new RegExp(ROUTES.NO_ACCESS));
+
+    		await dynamicFormPage.page.goto(ROUTES.LEGACY_ASSIGNMENT);
+    		await dynamicFormPage.expectUrl(new RegExp(ROUTES.NO_ACCESS));
+    	});
+
+    	// Scenario 4: Non-Blacklisted User (Allowed Legacy)
+    	// Assuming Non-Whitelisted for New = Non-Blacklisted for Legacy
+    	test('Scenario 4: Non-blacklisted user can access legacy pages', async ({
+    		loginPage,
+    		dynamicFormPage,
+    	}) => {
+    		await loginPage.visit();
+    		await loginPage.login(
+    			UNAUTHORIZED_CREDENTIALS.EMAIL,
+    			UNAUTHORIZED_CREDENTIALS.PASSWORD
+    		);
+
+    		// Direct Access Check
+    		await dynamicFormPage.page.goto(ROUTES.LEGACY_FORM);
+    		await expect(dynamicFormPage.page).toHaveURL(new RegExp(ROUTES.LEGACY_FORM));
     	});
     });
     ```
