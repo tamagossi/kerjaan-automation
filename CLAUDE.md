@@ -49,14 +49,14 @@ Every folder has an `index.ts` that re-exports its public API.
 Import via barrel:
 
 ```typescript
-import { BasePage } from "@/src/core";
-import { LoginPage } from "@/tests/fe/auth/(login)";
+import { BasePage } from '@/src/core';
+import { LoginPage } from '@/tests/fe/auth/(login)';
 ```
 
 Sibling files in the same directory may use relative imports:
 
 ```typescript
-import { LoginPage } from "./login.page";
+import { LoginPage } from './login.page';
 ```
 
 ## 5. Import Ordering
@@ -128,7 +128,15 @@ Each spec file imports from its nearest parent fixture. The chain propagates all
 - `*.data.json` — static/known-good test data (credentials, expected field values)
 - Data files are scoped to their module/sub-module
 
-## 12. Adding New Modules — Checklist
+## 12. Authentication & State
+
+- **Token Caching**: `src/helpers/auth.helper.ts` caches the auth token in `.auth/token.json` to reuse across tests.
+- **Storage State**: `src/helpers/auth.helper.ts` generates Playwright `storageState` in `.auth/state.json`.
+- **Fixtures**:
+    - `authenticatedPage` (in `fe.fixture.ts`) automatically uses the cached `storageState`.
+    - `loginPage` (in `auth.fixture.ts`) uses a clean `page` context (no auth) to test the login flow itself.
+
+## 13. Adding New Modules — Checklist
 
 1. Create module folder (e.g., `tests/fe/employee/`)
 2. Create page object (`employee.page.ts`) or API client (`employee.api.ts`)
@@ -140,16 +148,16 @@ Each spec file imports from its nearest parent fixture. The chain propagates all
 
 ## Commands
 
-| Script          | Command                                                       | Purpose                                        |
-| --------------- | ------------------------------------------------------------- | ---------------------------------------------- |
-| `test`          | `npx playwright test`                                         | Run all tests (FE + BE)                        |
-| `test:fe`       | `npx playwright test --project=fe`                            | FE tests only                                  |
-| `test:be`       | `npx playwright test --project=be`                            | BE tests only                                  |
-| `test:fe:debug` | `npx playwright test --project=fe --debug`                    | FE with Playwright Inspector                   |
-| `test:be:debug` | `npx playwright test --project=be --debug`                    | BE with Playwright Inspector                   |
-| `test:dev`      | `cross-env TEST_ENV=dev npx playwright test`                  | All tests against dev                          |
-| `test:staging`  | `cross-env TEST_ENV=staging npx playwright test`              | All tests against staging                      |
-| `lint`          | `eslint .`                                                    | Check all files for lint errors                |
-| `lint:fix`      | `eslint . --fix`                                              | Auto-fix lint errors (includes import sorting) |
-| `report`        | `npx playwright show-report`                                  | Open HTML report                               |
-| `codegen`       | `npx playwright codegen`                                      | Launch code generator                          |
+| Script          | Command                                          | Purpose                                        |
+| --------------- | ------------------------------------------------ | ---------------------------------------------- |
+| `test`          | `npx playwright test`                            | Run all tests (FE + BE)                        |
+| `test:fe`       | `npx playwright test --project=fe`               | FE tests only                                  |
+| `test:be`       | `npx playwright test --project=be`               | BE tests only                                  |
+| `test:fe:debug` | `npx playwright test --project=fe --debug`       | FE with Playwright Inspector                   |
+| `test:be:debug` | `npx playwright test --project=be --debug`       | BE with Playwright Inspector                   |
+| `test:dev`      | `cross-env TEST_ENV=dev npx playwright test`     | All tests against dev                          |
+| `test:staging`  | `cross-env TEST_ENV=staging npx playwright test` | All tests against staging                      |
+| `lint`          | `eslint .`                                       | Check all files for lint errors                |
+| `lint:fix`      | `eslint . --fix`                                 | Auto-fix lint errors (includes import sorting) |
+| `report`        | `npx playwright show-report`                     | Open HTML report                               |
+| `codegen`       | `npx playwright codegen`                         | Launch code generator                          |

@@ -133,7 +133,15 @@ Each spec file imports from its nearest parent fixture. The chain propagates all
 - `*.data.json` — static/known-good test data (credentials, expected field values)
 - Data files are scoped to their module/sub-module
 
-## 12. Adding New Modules — Checklist
+## 12. Authentication & State
+
+- **Token Caching**: `src/helpers/auth.helper.ts` caches the auth token in `.auth/token.json` to reuse across tests.
+- **Storage State**: `src/helpers/auth.helper.ts` generates Playwright `storageState` in `.auth/state.json`.
+- **Fixtures**:
+  - `authenticatedPage` (in `fe.fixture.ts`) automatically uses the cached `storageState`.
+  - `loginPage` (in `auth.fixture.ts`) uses a clean `page` context (no auth) to test the login flow itself.
+
+## 13. Adding New Modules — Checklist
 
 1. Create module folder (e.g., `tests/fe/employee/`)
 2. Create page object (`employee.page.ts`) or API client (`employee.api.ts`)

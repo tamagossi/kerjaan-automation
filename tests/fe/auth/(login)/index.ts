@@ -1,2 +1,2 @@
-export { createEmptyLoginData, createLoginData } from "./login.data";
-export { LoginPage } from "./login.page";
+export * from './login.constant';
+export * from './login.page';

@@ -1,16 +1,14 @@
-import { expect,test as base } from "@/tests/fe";
-
-import { AuthPage } from "./auth.page";
+import { test as base } from '../fe.fixture';
+import { LoginPage } from './(login)';
 
 type AuthFixtures = {
-  authPage: AuthPage;
+	loginPage: LoginPage;
 };
 
 export const test = base.extend<AuthFixtures>({
-  authPage: async ({ page }, use) => {
-    const authPage = new AuthPage(page);
-    await use(authPage);
-  },
+	loginPage: async ({ page }, use) => {
+		await use(new LoginPage(page));
+	},
 });
 
-export { expect };
+export { expect } from '../fe.fixture';
