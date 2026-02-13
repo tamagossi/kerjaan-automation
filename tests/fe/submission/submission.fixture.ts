@@ -1,6 +1,6 @@
 import { LoginPage } from '../auth/(login)/login.page';
 import { test as base } from '../fe.fixture';
-import { DynamicFormPage } from './(dynamic-form)/dynamic-form.page';
+import { DynamicFormPage } from './(form)/form.page';
 
 type SubmissionFixtures = {
 	dynamicFormPage: DynamicFormPage;

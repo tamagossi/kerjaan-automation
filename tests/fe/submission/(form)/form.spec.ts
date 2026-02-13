@@ -4,7 +4,7 @@ import {
 	BLACLISTED_CREDENTIALS,
 	NON_BLACKLISTED_CREDENTIALS,
 	WHITELISTED_CREDENTIALS,
-} from './dynamic-form.constant';
+} from './form.constant';
 
 test.describe('PK136 Epic 1 - Form template List Creation & Initiation', () => {
 	test('TS.1: Whitelisted user sees Task Operations and Form menu', async ({
@@ -15,17 +15,8 @@ test.describe('PK136 Epic 1 - Form template List Creation & Initiation', () => {
 		await loginPage.login(WHITELISTED_CREDENTIALS.EMAIL, WHITELISTED_CREDENTIALS.PASSWORD);
 		await loginPage.waitForChangeRoute();
 
-		/**
-		 * Seems like we need to wait for the change route before navigateToSettings
-		 */
 		await dynamicFormPage.navigateToSettings();
 		await dynamicFormPage.verifyTaskOperationsVisible();
-
-		/**
-		 * TODO:
-		 * 1. visit /settings/task-operation
-		 * 2. make sure Form menu is visible
-		 */
 	});
 
 	test('TS.2: Non-whitelisted user sees Task Ops but NOT Form menu', async ({
