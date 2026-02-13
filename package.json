@@ -1,0 +1,38 @@
+{
+  "name": "kerjaan-automation",
+  "version": "1.0.0",
+  "description": "Playwright test automation for kerjaan-cp (FE) and hcmsvc (BE)",
+  "private": true,
+  "scripts": {
+    "test": "npx playwright test",
+    "test:fe": "npx playwright test --project=fe",
+    "test:be": "npx playwright test --project=be",
+    "test:fe:debug": "npx playwright test --project=fe --debug",
+    "test:be:debug": "npx playwright test --project=be --debug",
+    "test:dev": "cross-env TEST_ENV=dev npx playwright test",
+    "test:staging": "cross-env TEST_ENV=staging npx playwright test",
+    "test:production": "cross-env TEST_ENV=production npx playwright test",
+    "test:fe:dev": "cross-env TEST_ENV=dev npx playwright test --project=fe",
+    "test:fe:staging": "cross-env TEST_ENV=staging npx playwright test --project=fe",
+    "test:be:dev": "cross-env TEST_ENV=dev npx playwright test --project=be",
+    "test:be:staging": "cross-env TEST_ENV=staging npx playwright test --project=be",
+    "test:grep": "npx playwright test --grep",
+    "test:fe:grep": "npx playwright test --project=fe --grep",
+    "test:be:grep": "npx playwright test --project=be --grep",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "report": "npx playwright show-report",
+    "codegen": "npx playwright codegen"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^9.0.0",
+    "@playwright/test": "^1.58.0",
+    "@types/node": "^20.0.0",
+    "cross-env": "^7.0.0",
+    "dotenv": "^16.0.0",
+    "eslint": "^9.0.0",
+    "eslint-plugin-simple-import-sort": "^12.0.0",
+    "typescript": "^5.0.0",
+    "typescript-eslint": "^8.55.0"
+  }
+}

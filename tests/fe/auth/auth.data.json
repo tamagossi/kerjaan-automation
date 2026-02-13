@@ -1,0 +1,11 @@
+{
+  "validUser": {
+    "email": "admin@staffinc.co",
+    "password": "secret"
+  },
+  "errorMessages": {
+    "invalidCredentials": "Invalid email or password",
+    "requiredEmail": "Email is required",
+    "requiredPassword": "Password is required"
+  }
+}

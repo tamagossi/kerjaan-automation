@@ -1,0 +1,9 @@
+node_modules/
+playwright-report/
+test-results/
+blob-report/
+.env.dev
+.env.staging
+.env.production
+dist/
+*.tsbuildinfo

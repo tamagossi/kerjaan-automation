@@ -1,0 +1,10 @@
+{
+  "validCredentials": {
+    "email": "admin@staffinc.co",
+    "password": "secret"
+  },
+  "invalidCredentials": {
+    "email": "notfound@staffinc.co",
+    "password": "wrongpassword"
+  }
+}
