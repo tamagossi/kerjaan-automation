@@ -6,4 +6,12 @@ export const ROUTES = {
 		FORM_TEMPLATE: '/digital-forms',
 		FORM_ASSIGNMENT: '/digital-forms/assignment',
 	},
+	SUBMISSIONS: {
+		TASK_OPERATIONS: {
+			DIGITAL_FORMS: {
+				LIST: '/settings/task-operations/forms',
+				CREATE: '/settings/task-operations/forms/create',
+			},
+		},
+	},
 };

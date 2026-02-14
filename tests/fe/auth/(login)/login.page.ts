@@ -26,6 +26,7 @@ export class LoginPage extends BasePage {
 		await this.emailInput.fill(email);
 		await this.passwordInput.fill(password);
 		await this.submitButton.click();
+		await this.waitForChangeRoute();
 	}
 
 	async verifyOnLoginPage() {

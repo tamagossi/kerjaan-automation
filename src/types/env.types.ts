@@ -1,9 +1,19 @@
 export interface EnvConfig {
-  FE_BASE_URL: string;
-  BE_BASE_URL: string;
-  BE_API_VERSION: string;
-  ADMIN_EMAIL: string;
-  ADMIN_PASSWORD: string;
-  SLOW_MO: string;
-  HEADLESS: string;
+	BE_API_VERSION: string;
+	BE_BASE_URL: string;
+	FE_BASE_URL: string;
+	HEADLESS: string;
+	SLOW_MO: string;
+
+	CRED_MAIN_EMAIL: string;
+	CRED_MAIN_PASSWORD: string;
+
+	PK136_BLACKLISTED_EMAIL: string;
+	PK136_BLACKLISTED_PASSWORD: string;
+	PK136_NON_BLACKLISTED_EMAIL: string;
+	PK136_NON_BLACKLISTED_PASSWORD: string;
+	PK136_NON_WHITELISTED_EMAIL: string;
+	PK136_NON_WHITELISTED_PASSWORD: string;
+	PK136_WHITELISTED_EMAIL: string;
+	PK136_WHITELISTED_PASSWORD: string;
 }

@@ -4,7 +4,6 @@ import path from 'node:path';
 import { request } from '@playwright/test';
 
 import { loadEnvConfig } from '@/src/config';
-import { LOGIN_CREDENTIALS } from '@/tests/fe/auth/(login)';
 
 const AUTH_DIR = path.resolve(process.cwd(), '.auth');
 const TOKEN_PATH = path.join(AUTH_DIR, 'token.json');
@@ -28,7 +27,7 @@ export async function getAuthToken(): Promise<string> {
 	const env = loadEnvConfig();
 	const apiContext = await request.newContext({ baseURL: env.BE_BASE_URL });
 	const response = await apiContext.post(`/${env.BE_API_VERSION}/auth/login`, {
-		data: { email: LOGIN_CREDENTIALS.EMAIL, password: LOGIN_CREDENTIALS.PASSWORD },
+		data: { email: env.CRED_MAIN_EMAIL, password: env.CRED_MAIN_PASSWORD },
 	});
 
 	if (!response.ok()) {

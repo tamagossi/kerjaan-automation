@@ -146,6 +146,85 @@ Each spec file imports from its nearest parent fixture. The chain propagates all
 6. For sub-modules, create `(sub)/` folder and repeat the pattern
 7. Sub-module page/api extends the parent module's class
 
+## 14. IPBI Mode — Plan-First Development Workflow
+
+When adding new features or implementing significant changes, follow the **IPBI (Input-to-Plan-Build-Iterate)** workflow:
+
+### Workflow Phases
+
+1. **Plan**: Create detailed implementation plan in `.github/ai-docs/plan.md`
+2. **Review**: Get approval before proceeding to implementation
+3. **Build**: Execute the approved plan
+4. **Iterate**: Update plan and re-approve if deviations needed
+
+### Plan Format
+
+- **Bulleted list format with code snippets**:
+    - Top-level bullets = file paths or environments (e.g., `Terminal`, `tests/fe/auth/auth.page.ts`)
+    - Sub-bullets = step descriptions (what will be added/changed)
+    - Code blocks = concrete implementation for each step
+- **Complete coverage** — include all affected files
+- **Clear context** — explain the why, not just the what
+
+### Example Plan Structure
+
+````markdown
+# Feature: Add Submission Form Tests
+
+> Context: Implement E2E tests for form submission flow
+> Requirements: Test form validation, submission, and redirect
+
+### `tests/fe/submission/submission.page.ts`
+
+- Add form field locators (name, email, description inputs)
+- Add submit button locator
+- Add validation error message locators
+- Add submitForm method to fill and submit form
+- Add verifyValidationError method to check error display
+- Add verifySuccessRedirect method to confirm redirect after submission
+
+    ```typescript
+    export class SubmissionPage extends BasePage {
+    	readonly nameInput: Locator;
+    	readonly emailInput: Locator;
+    	readonly submitButton: Locator;
+
+    	constructor(page: Page) {
+    		super(page);
+    		this.nameInput = page.getByLabel('Name');
+    		this.emailInput = page.getByLabel('Email');
+    		this.submitButton = page.getByRole('button', { name: 'Submit' });
+    	}
+
+    	async submitForm(name: string, email: string) {
+    		await this.nameInput.fill(name);
+    		await this.emailInput.fill(email);
+    		await this.submitButton.click();
+    	}
+    }
+    ```
+
+### `Terminal`
+
+- Run npm install to ensure dependencies are up to date
+- Run tests in headed mode to verify implementation
+
+    ```bash
+    npm install
+    npx playwright test --headed --project=fe
+    ```
+````
+
+### Benefits
+
+- **Reviewability**: Changes reviewed before implementation
+- **Clarity**: Clear roadmap reduces back-and-forth
+- **Documentation**: Plan serves as implementation record
+
+### Detailed Instructions
+
+See `.github/instructions/ipbi.instruction.md` for complete format guidelines and examples.
+
 ## Commands
 
 | Script          | Command                                          | Purpose                                        |

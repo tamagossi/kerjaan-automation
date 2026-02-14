@@ -1,11 +1,15 @@
+import { loadEnvConfig } from '@/src/config';
+
 import { test } from '../auth.fixture';
-import { createRandomCredentials, LOGIN_CREDENTIALS } from './index';
+import { createRandomCredentials } from './index';
+
+const env = loadEnvConfig();
 
 test.describe('Login feature: ', () => {
 	test('TS.1: Should login successfully', async ({ loginPage }) => {
 		await loginPage.visit();
 		await loginPage.verifyOnLoginPage();
-		await loginPage.login(LOGIN_CREDENTIALS.EMAIL, LOGIN_CREDENTIALS.PASSWORD);
+		await loginPage.login(env.CRED_MAIN_EMAIL, env.CRED_MAIN_PASSWORD);
 
 		await loginPage.expectUrl(/.*agents/);
 	});
