@@ -2,11 +2,7 @@ import { expect, type Locator, type Page } from '@playwright/test';
 
 import { BasePage } from '@/src/core';
 
-export class DynamicFormPage extends BasePage {
-	readonly taskOperationSettingMenu: Locator;
-	readonly digitalFormMenu: Locator;
-
-	// Form Creation Page Locators
+export class FormCreationStep1Page extends BasePage {
 	readonly stepperComponent: Locator;
 	readonly step1Button: Locator;
 	readonly step2Button: Locator;
@@ -21,21 +17,13 @@ export class DynamicFormPage extends BasePage {
 
 	constructor(page: Page) {
 		super(page);
-		this.taskOperationSettingMenu = page.getByText('Task Operations');
-		this.digitalFormMenu = page.getByText('Digital Form');
-
-		// Stepper locators
 		this.stepperComponent = page.getByTestId('form-creation-stepper');
 		this.step1Button = page.getByTestId('create_form-stepper_1-basic_configuration-button');
 		this.step2Button = page.getByTestId('create_form-stepper_2-form_builder-button');
 		this.step3Button = page.getByTestId('create_form-stepper_3-logic_jump-button');
 		this.step4Button = page.getByTestId('create_form-stepper_4-preview-button');
 		this.step5Button = page.getByTestId('create_form-stepper_5-form_assignment-button');
-
-		// Leave button locators
 		this.leaveButton = page.getByTestId('create_form-leave-button');
-
-		// Leave modal locators
 		this.leaveModalTitle = page.getByTestId('form-creation-leave-confirmation-modal-title');
 		this.leaveModalCancelButton = page.getByTestId(
 			'form-creation-leave-confirmation-modal-cancel-btn'
@@ -48,28 +36,8 @@ export class DynamicFormPage extends BasePage {
 		);
 	}
 
-	async navigateToSettings() {
-		await this.page.goto('/settings');
-	}
-
-	async verifyTaskOperationsVisible() {
-		await expect(this.taskOperationSettingMenu).toBeVisible();
-	}
-
-	async verifyLegacyFormMenuHidden() {
-		await expect(this.digitalFormMenu).toBeHidden();
-	}
-
-	async verifyLegacyFormMenuVisible() {
-		await expect(this.digitalFormMenu).toBeVisible();
-	}
-
 	async navigateToFormCreation() {
 		await this.page.goto('/settings/task-operations/forms/create');
-	}
-
-	async navigateToFormList() {
-		await this.page.goto('/settings/task-operations/forms');
 	}
 
 	async clickLeaveButton() {
