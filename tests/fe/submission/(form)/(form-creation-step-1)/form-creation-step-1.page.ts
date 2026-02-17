@@ -34,7 +34,6 @@ export class FormCreationStep1Page extends BasePage {
 	// Form Availability & Target Section
 	readonly setAsTemporaryToggle: Locator;
 	readonly activePeriodInputGroup: Locator;
-	readonly activePeriodDatePicker: Locator;
 	readonly setLimitToggle: Locator;
 	readonly limitBasedOnDayRadio: Locator;
 	readonly limitBasedOnFormRadio: Locator;
@@ -93,9 +92,6 @@ export class FormCreationStep1Page extends BasePage {
 			'create_form-step_1-form_availability-set_as_temporary-switch'
 		);
 		this.activePeriodInputGroup = page.getByTestId('active-period-input-wrapper');
-		this.activePeriodDatePicker = page.getByTestId(
-			'create_form-step_1-form_availability-active_period-date_picker'
-		);
 		this.setLimitToggle = page.getByTestId(
 			'create_form-step_1-form_availability-set_limit-switch'
 		);
@@ -267,63 +263,6 @@ export class FormCreationStep1Page extends BasePage {
 
 	async verifyActivePeriodFieldsHidden() {
 		await expect(this.activePeriodInputGroup).toBeHidden();
-	}
-
-	async selectActivePeriod(startDate: Date, endDate: Date) {
-		const baseTestId = 'create_form-step_1-form_availability-active_period-date_picker';
-
-		// Open the date picker
-		const trigger = this.page.getByTestId(`${baseTestId}-trigger`);
-		await trigger.scrollIntoViewIfNeeded();
-		await trigger.click();
-
-		// Wait for date picker calendar to be visible (check for month header)
-		const monthHeader = this.page.getByTestId(`${baseTestId}-month-text`);
-		await monthHeader.waitFor({ state: 'visible', timeout: 5000 });
-		await this.page.waitForTimeout(500);
-
-		// Format dates as YYYY-MM-DD for data-testid
-		const formatDate = (date: Date) => {
-			const year = date.getFullYear();
-			const month = String(date.getMonth() + 1).padStart(2, '0');
-			const day = String(date.getDate()).padStart(2, '0');
-			return `${year}-${month}-${day}`;
-		};
-
-		// Click start date
-		const startDateTestId = `${baseTestId}-day-${formatDate(startDate)}`;
-		const startDateElement = this.page.getByTestId(startDateTestId);
-		await startDateElement.waitFor({ state: 'visible', timeout: 5000 });
-		await startDateElement.click({ force: true });
-		await this.page.waitForTimeout(300);
-
-		// Navigate to the month containing the end date if needed
-		const monthsDiff =
-			(endDate.getFullYear() - startDate.getFullYear()) * 12 +
-			(endDate.getMonth() - startDate.getMonth());
-
-		if (monthsDiff > 0) {
-			const nextButton = this.page.getByTestId(`${baseTestId}-next-button`);
-			for (let i = 0; i < monthsDiff; i++) {
-				await nextButton.waitFor({ state: 'visible', timeout: 5000 });
-				await nextButton.click({ force: true });
-				await this.page.waitForTimeout(400); // Wait for calendar to update
-			}
-		} else if (monthsDiff < 0) {
-			const prevButton = this.page.getByTestId(`${baseTestId}-prev-button`);
-			for (let i = 0; i < Math.abs(monthsDiff); i++) {
-				await prevButton.waitFor({ state: 'visible', timeout: 5000 });
-				await prevButton.click({ force: true });
-				await this.page.waitForTimeout(400); // Wait for calendar to update
-			}
-		}
-
-		// Click end date
-		const endDateTestId = `${baseTestId}-day-${formatDate(endDate)}`;
-		const endDateElement = this.page.getByTestId(endDateTestId);
-		await endDateElement.waitFor({ state: 'visible', timeout: 5000 });
-		await endDateElement.click({ force: true });
-		await this.page.waitForTimeout(300);
 	}
 
 	async toggleSetLimit(enable: boolean) {

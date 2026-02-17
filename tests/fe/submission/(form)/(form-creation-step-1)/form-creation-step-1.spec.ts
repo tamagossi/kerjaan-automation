@@ -223,28 +223,7 @@ test.describe('PK136 Epic 2 - Form Creation - Basic Information', () => {
 			await formCreationStep1Page.verifyActivePeriodFieldsHidden();
 		});
 
-		/**
-		 * Commented because of locator is not successfully found, need to be fixed in the future
-		 */
-		// test('TC.9: Active Period date range validation - max 360 days', async ({
-		// 	formCreationStep1Page,
-		// }) => {
-		// 	const testData = createBasicInformationData();
-
-		// 	await formCreationStep1Page.fillFormName(testData.formName);
-		// 	await formCreationStep1Page.toggleSetAsTemporary(true);
-
-		// 	const startDate = new Date();
-		// 	const endDate = new Date();
-		// 	endDate.setDate(endDate.getDate() + 361);
-
-		// 	await formCreationStep1Page.selectActivePeriod(startDate, endDate);
-		// 	await formCreationStep1Page.verifyFieldError(
-		// 		'End date cannot be more than 360 days from start date'
-		// 	);
-		// });
-
-		test('TC.10: Set Limit toggle shows/hides limit configuration fields', async ({
+		test('TC.9: Set Limit toggle shows/hides limit configuration fields', async ({
 			formCreationStep1Page,
 		}) => {
 			await formCreationStep1Page.verifyLimitFieldsHidden();
@@ -254,7 +233,7 @@ test.describe('PK136 Epic 2 - Form Creation - Basic Information', () => {
 			await formCreationStep1Page.verifyLimitFieldsHidden();
 		});
 
-		test('TC.11: Set Limit configuration validation - positive integer required', async ({
+		test('TC.10: Set Limit configuration validation - positive integer required', async ({
 			formCreationStep1Page,
 		}) => {
 			const testData = createBasicInformationData();
@@ -267,7 +246,7 @@ test.describe('PK136 Epic 2 - Form Creation - Basic Information', () => {
 			await formCreationStep1Page.verifyNextButtonEnabled();
 		});
 
-		test('TC.12: Next button is disabled when mandatory fields incomplete', async ({
+		test('TC.11: Next button is disabled when mandatory fields incomplete', async ({
 			formCreationStep1Page,
 		}) => {
 			await formCreationStep1Page.verifyNextButtonDisabled();
@@ -276,7 +255,7 @@ test.describe('PK136 Epic 2 - Form Creation - Basic Information', () => {
 			await formCreationStep1Page.verifyNextButtonEnabled();
 		});
 
-		test('TC.13: Next button is enabled when all mandatory fields complete', async ({
+		test('TC.12: Next button is enabled when all mandatory fields complete', async ({
 			formCreationStep1Page,
 		}) => {
 			const testData = createBasicInformationData();
@@ -285,7 +264,7 @@ test.describe('PK136 Epic 2 - Form Creation - Basic Information', () => {
 			await formCreationStep1Page.verifyNextButtonEnabled();
 		});
 
-		test('TC.14: Complete form with all sections filled', async ({ formCreationStep1Page }) => {
+		test('TC.13: Complete form with all sections filled', async ({ formCreationStep1Page }) => {
 			const testData = createBasicInformationData();
 
 			await formCreationStep1Page.fillFormName(testData.formName);
@@ -303,7 +282,7 @@ test.describe('PK136 Epic 2 - Form Creation - Basic Information', () => {
 			await formCreationStep1Page.verifyNextButtonEnabled();
 		});
 
-		test('TC.15: Training Material with all optional fields filled', async ({
+		test('TC.14: Training Material with all optional fields filled', async ({
 			formCreationStep1Page,
 		}) => {
 			const testData = createBasicInformationData();
@@ -319,7 +298,7 @@ test.describe('PK136 Epic 2 - Form Creation - Basic Information', () => {
 			await formCreationStep1Page.verifyNextButtonEnabled();
 		});
 
-		test('TC.16: Limit Based On can toggle between Day and Form options', async ({
+		test('TC.15: Limit Based On can toggle between Day and Form options', async ({
 			formCreationStep1Page,
 		}) => {
 			const testData = createBasicInformationData();
