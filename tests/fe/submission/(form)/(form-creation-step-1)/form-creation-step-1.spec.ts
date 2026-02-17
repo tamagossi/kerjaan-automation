@@ -129,7 +129,7 @@ test.describe('PK136 Epic 2 - Form Creation - Basic Information', () => {
 			);
 		});
 
-		test('TC.2.1: Form Template Name validates maximum character limit', async ({
+		test('TC.3: Form Template Name validates maximum character limit', async ({
 			formCreationStep1Page,
 		}) => {
 			const longFormName = createLongText(250);
@@ -140,7 +140,7 @@ test.describe('PK136 Epic 2 - Form Creation - Basic Information', () => {
 			await expect(inputValue.length).toBeLessThanOrEqual(250);
 		});
 
-		test('TC.2.2: Form Template Description validates maximum character limit', async ({
+		test('TC.4: Form Template Description validates maximum character limit', async ({
 			formCreationStep1Page,
 		}) => {
 			const testData = createBasicInformationData();
@@ -155,7 +155,7 @@ test.describe('PK136 Epic 2 - Form Creation - Basic Information', () => {
 			await formCreationStep1Page.verifyNextButtonEnabled();
 		});
 
-		test('TC.3: Training Material toggle shows/hides dependent fields', async ({
+		test('TC.5: Training Material toggle shows/hides dependent fields', async ({
 			formCreationStep1Page,
 		}) => {
 			await formCreationStep1Page.verifyTrainingFieldsHidden();
@@ -165,7 +165,7 @@ test.describe('PK136 Epic 2 - Form Creation - Basic Information', () => {
 			await formCreationStep1Page.verifyTrainingFieldsHidden();
 		});
 
-		test('TC.4: Training Material fields are required when toggle is Yes', async ({
+		test('TC.6: Training Material fields are required when toggle is Yes', async ({
 			formCreationStep1Page,
 		}) => {
 			const testData = createBasicInformationData();
@@ -175,7 +175,7 @@ test.describe('PK136 Epic 2 - Form Creation - Basic Information', () => {
 			await formCreationStep1Page.verifyNextButtonDisabled();
 		});
 
-		test('TC.5: Training Material fields validation - character limits', async ({
+		test('TC.7: Training Material fields validation - character limits', async ({
 			formCreationStep1Page,
 		}) => {
 			const testData = createBasicInformationData();
@@ -198,21 +198,21 @@ test.describe('PK136 Epic 2 - Form Creation - Basic Information', () => {
 			await formCreationStep1Page.verifyNextButtonEnabled();
 		});
 
-		test('TC.6: Editable Submission toggle default state is No and disabled', async ({
+		test('TC.8: Editable Submission toggle default state is No and disabled', async ({
 			formCreationStep1Page,
 		}) => {
 			await formCreationStep1Page.verifyEditableSubmissionDisabled();
 			await formCreationStep1Page.verifyEditableSubmissionUnchecked();
 		});
 
-		test('TC.7: Need Approval toggle default state is No and disabled', async ({
+		test('TC.9: Need Approval toggle default state is No and disabled', async ({
 			formCreationStep1Page,
 		}) => {
 			await formCreationStep1Page.verifyNeedsApprovalDisabled();
 			await formCreationStep1Page.verifyNeedsApprovalUnchecked();
 		});
 
-		test('TC.8: Set as Temporary toggle shows/hides Active Period fields', async ({
+		test('TC.10: Set as Temporary toggle shows/hides Active Period fields', async ({
 			formCreationStep1Page,
 		}) => {
 			await formCreationStep1Page.verifyActivePeriodFieldsHidden();
@@ -223,7 +223,7 @@ test.describe('PK136 Epic 2 - Form Creation - Basic Information', () => {
 			await formCreationStep1Page.verifyActivePeriodFieldsHidden();
 		});
 
-		test('TC.9: Set Limit toggle shows/hides limit configuration fields', async ({
+		test('TC.11: Set Limit toggle shows/hides limit configuration fields', async ({
 			formCreationStep1Page,
 		}) => {
 			await formCreationStep1Page.verifyLimitFieldsHidden();
@@ -233,7 +233,7 @@ test.describe('PK136 Epic 2 - Form Creation - Basic Information', () => {
 			await formCreationStep1Page.verifyLimitFieldsHidden();
 		});
 
-		test('TC.10: Set Limit configuration validation - positive integer required', async ({
+		test('TC.12: Set Limit configuration validation - positive integer required', async ({
 			formCreationStep1Page,
 		}) => {
 			const testData = createBasicInformationData();
@@ -246,7 +246,7 @@ test.describe('PK136 Epic 2 - Form Creation - Basic Information', () => {
 			await formCreationStep1Page.verifyNextButtonEnabled();
 		});
 
-		test('TC.11: Next button is disabled when mandatory fields incomplete', async ({
+		test('TC.13: Next button is disabled when mandatory fields incomplete', async ({
 			formCreationStep1Page,
 		}) => {
 			await formCreationStep1Page.verifyNextButtonDisabled();
@@ -255,7 +255,7 @@ test.describe('PK136 Epic 2 - Form Creation - Basic Information', () => {
 			await formCreationStep1Page.verifyNextButtonEnabled();
 		});
 
-		test('TC.12: Next button is enabled when all mandatory fields complete', async ({
+		test('TC.14: Next button is enabled when all mandatory fields complete', async ({
 			formCreationStep1Page,
 		}) => {
 			const testData = createBasicInformationData();
@@ -264,7 +264,7 @@ test.describe('PK136 Epic 2 - Form Creation - Basic Information', () => {
 			await formCreationStep1Page.verifyNextButtonEnabled();
 		});
 
-		test('TC.13: Complete form with all sections filled', async ({ formCreationStep1Page }) => {
+		test('TC.15: Complete form with all sections filled', async ({ formCreationStep1Page }) => {
 			const testData = createBasicInformationData();
 
 			await formCreationStep1Page.fillFormName(testData.formName);
@@ -282,7 +282,7 @@ test.describe('PK136 Epic 2 - Form Creation - Basic Information', () => {
 			await formCreationStep1Page.verifyNextButtonEnabled();
 		});
 
-		test('TC.14: Training Material with all optional fields filled', async ({
+		test('TC.16: Training Material with all optional fields filled', async ({
 			formCreationStep1Page,
 		}) => {
 			const testData = createBasicInformationData();
@@ -298,7 +298,7 @@ test.describe('PK136 Epic 2 - Form Creation - Basic Information', () => {
 			await formCreationStep1Page.verifyNextButtonEnabled();
 		});
 
-		test('TC.15: Limit Based On can toggle between Day and Form options', async ({
+		test('TC.17: Limit Based On can toggle between Day and Form options', async ({
 			formCreationStep1Page,
 		}) => {
 			const testData = createBasicInformationData();
