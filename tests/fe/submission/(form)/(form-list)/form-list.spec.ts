@@ -18,15 +18,16 @@ test.describe('PK136 Epic 1 - Form template List Creation & Initiation', () => {
 	});
 
 	test('TS.2: Non-whitelisted user sees Task Ops but NOT Form menu', async ({
-		// loginPage,
-		// formListPage,
+		loginPage,
+		formListPage,
 	}) => {
-		/**
-		 * TODO:
-		 *
-		 * 1. will provide the account later
-		 * 2. make sure the task operations is visible but when it redirect to task operations page, the form menu is not visible
-		 */
+		await loginPage.visit();
+		await loginPage.login(env.PK136_NON_WHITELISTED_EMAIL, env.PK136_NON_WHITELISTED_PASSWORD);
+
+		await formListPage.navigateToSettings();
+		await formListPage.verifyTaskOperationsVisible();
+		await formListPage.navigateToTaskOperations();
+		await formListPage.verifyFormMenuHidden();
 	});
 
 	test('TS.3: Blacklisted user cannot access legacy pages', async ({
